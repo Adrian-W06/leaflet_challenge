@@ -2,8 +2,7 @@
 module 15
 Always show details
 
-Copy
-# Recreate the README file after environment reset
+
 readme_content = """# 🌍 Earthquake & Tectonic Plate Visualization
 
 This project visualizes real-time earthquake data and tectonic plate boundaries on an interactive map using **Leaflet.js** and **D3.js**.
