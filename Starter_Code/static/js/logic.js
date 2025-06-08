@@ -1,4 +1,10 @@
 // Create the 'basemap' tile layer that will be the background of our map.
+
+let satellite = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "© OpenStreetMap contributors",
+  maxZoom: 18,
+  minZoom: 2
+});
 let basemap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "© OpenStreetMap contributors",
   maxZoom: 18,
@@ -77,7 +83,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   // This function determines the radius of the earthquake marker based on its magnitude.
   function getRadius(magnitude) { 
     if (magnitude === 0) {
-      return 1; // Minimum radius for earthquakes with magnitude 0
+      return 1;   
     }
     return magnitude * 4; // Scale the radius by a factor of 4
 
@@ -87,13 +93,14 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   L.geoJson(data, {
     // Turn each feature into a circleMarker on the map.
     pointToLayer: function (feature, latlng) {
-
+      return L.circleMarker(latlng);
     },
     // Set the style for each circleMarker using our styleInfo function.
     style: styleInfo,
     // Create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
     onEachFeature: function (feature, layer) {
-
+      layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place + "<br>Depth: " + feature.geometry.coordinates[2] + " km");
+      
     }
   // OPTIONAL: Step 2
   // Add the data to the earthquake layer instead of directly to the map.
@@ -143,4 +150,21 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     tectonic_plates.addTo(map);
 
   });
+});
+
+
+d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson").then(function (data) {
+  // Process the data for the 2.5+ magnitude earthquakes
+  L.geoJson(data, {
+    // Turn each feature into a circleMarker on the map.
+    pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng);
+    },
+    // Set the style for each circleMarker using our styleInfo function.
+    style: styleInfo,
+    // Create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+    }
+  }).addTo(map);
 });
